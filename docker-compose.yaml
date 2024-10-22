@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+    depends_on:
+      - db
+    volumes:
+      - ./sonarqube/data:/opt/sonarqube/data
+      - ./sonarqube/bundled-plugins:/opt/sonarqube/extensions/bundled-plugins
+      - ./sonarqube/logs:/opt/sonarqube/logs  # Mount logs to host
+      - ./sonarqube/conf:/opt/sonarqube/conf    # Mount configuration to host
+      - ./sonarqube/temp:/opt/sonarqube/temp      # Mount temporary files to host
+
+  db:
+    image: postgres:latest
+    container_name: sonarqube_db
+    environment:
+      - POSTGRES_DB=sonarqube
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Mount database data to host
+
+volumes:
+  sonarqube_data:
+  sonarqube_bundled_plugins:
+  db_data:
+
