@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fix-sonarqube-permissions
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: fix-sonarqube-permissions
+  template:
+    metadata:
+      labels:
+        name: fix-sonarqube-permissions
+    spec:
+      # Run the container with host network and volume mounts
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: fixer
+        image: busybox
+        securityContext:
+          privileged: true
+        command:
+          - /bin/sh
+          - -c
+          - |
+            # Adjust this path based on where SonarQube data is mounted on the host
+            TARGET_PATH="/mnt/data/sonarqube" 
+
+            # Create directory if it doesn't exist, then set the correct permissions
+            mkdir -p $TARGET_PATH/es8
+            chown -R 1000:1000 $TARGET_PATH
+            chmod -R 775 $TARGET_PATH
+            # Sleep to keep the pod running (to verify if needed)
+            sleep 3600
+      volumes:
+        - name: host-volume
+          hostPath:
+            path: /mnt/data/sonarqube  # Adjust path to your PV directory if different
