@@ -23,7 +23,7 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && apt-get install -y docker-ce-cli
 
 # Install Java (OpenJDK 11)
-RUN apt-get update && apt-get install -y openjdk-11-jdk
+RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven
@@ -39,7 +39,7 @@ USER buildagent
 WORKDIR /home/buildagent
 
 # Set environment variables for Java and Maven
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH="$JAVA_HOME/bin:$MAVEN_HOME/bin:${PATH}"
 
