@@ -1,4 +1,4 @@
 namespace: devops-tools
 volume:
   node:
-    name: "ip-192-168-21-98.ec2.internal" 
+    name: "ip-192-168-9-178.ec2.internal" 
